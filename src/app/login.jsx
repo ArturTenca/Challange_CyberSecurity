@@ -134,7 +134,7 @@ export default function LoginScreen() {
               />
               {devCodeHint ? (
                 <Text style={styles.devHint}>
-                  Desenvolvimento: código exibido acima ou no terminal da API.
+                  Modo demonstração: use o código exibido acima.
                 </Text>
               ) : null}
               <TouchableOpacity

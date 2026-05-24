@@ -34,7 +34,6 @@
       "reactCompiler": true
     },
     "extra": {
-      "apiBaseUrl": "http://localhost:3001",
       "payloadHmacSecret": "dev-hmac-secret-min-32-characters-long!!"
     }
   }

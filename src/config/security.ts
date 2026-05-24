@@ -4,10 +4,13 @@ import { Platform } from 'react-native';
 const extra = Constants.expoConfig?.extra ?? {};
 
 export function getApiBaseUrl(): string {
-  const fromExtra = extra.apiBaseUrl as string | undefined;
   const fromEnv = process.env.EXPO_PUBLIC_API_URL;
-  if (fromExtra) return fromExtra;
+  const fromExtra = extra.apiBaseUrl as string | undefined;
   if (fromEnv) return fromEnv;
+  if (fromExtra) return fromExtra;
+  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    return window.location.origin;
+  }
   if (Platform.OS === 'android') return 'http://10.0.2.2:3001';
   return 'http://localhost:3001';
 }

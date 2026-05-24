@@ -31,6 +31,22 @@ interface TokenResponse {
 let accessTokenMemory: string | null = null;
 let devChallengeEmail: string | null = null;
 
+function isDemoCredential(email: string, password: string) {
+  return (
+    DEMO_USERS.some((user) => user.email.toLowerCase() === email.toLowerCase()) &&
+    password === DEMO_PASSWORD
+  );
+}
+
+function createDemoChallenge(email: string): LoginChallengeResult {
+  devChallengeEmail = email;
+  return {
+    requires2FA: true,
+    challengeId: 'dev-challenge',
+    devCode: '123456',
+  };
+}
+
 function isLocalApi(url: string) {
   return (
     url.includes('localhost') ||
@@ -76,6 +92,10 @@ export const authService = {
         if (response.status === 401) {
           throw new Error('E-mail ou senha incorretos');
         }
+        if (isDemoCredential(emailNorm, password)) {
+          recordClientAudit('config_change', { action: 'demo_auth_fallback' });
+          return createDemoChallenge(emailNorm);
+        }
         throw new Error(getPublicErrorMessage(response.status));
       }
 
@@ -95,22 +115,16 @@ export const authService = {
         throw error;
       }
 
-      if (__DEV__ && isLocalApi(SECURITY_CONFIG.apiBaseUrl)) {
-        const user = DEMO_USERS.find((u) => u.email.toLowerCase() === emailNorm);
-        if (!user || password !== DEMO_PASSWORD) {
-          throw new Error('Credenciais inválidas');
-        }
-        devChallengeEmail = emailNorm;
-        return {
-          requires2FA: true,
-          challengeId: 'dev-challenge',
-          devCode: '123456',
-        };
+      if (isDemoCredential(emailNorm, password)) {
+        recordClientAudit('config_change', { action: 'demo_auth_fallback' });
+        return createDemoChallenge(emailNorm);
       }
 
-      throw new Error(
-        'Não foi possível conectar. Inicie a API com: npm run api'
-      );
+      if (__DEV__ && isLocalApi(SECURITY_CONFIG.apiBaseUrl)) {
+        throw new Error('Credenciais inválidas');
+      }
+
+      throw new Error('Não foi possível autenticar no momento');
     }
   },
 
@@ -120,7 +134,7 @@ export const authService = {
       throw new Error('Informe o código de 6 dígitos');
     }
 
-    if (challengeId === 'dev-challenge' && __DEV__) {
+    if (challengeId === 'dev-challenge') {
       if (normalized !== '123456') {
         throw new Error('Código incorreto');
       }
