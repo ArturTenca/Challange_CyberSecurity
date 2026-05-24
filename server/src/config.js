@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 require('dotenv').config();
 
 const DEFAULT_CORS =
@@ -25,16 +27,26 @@ const corsOrigins = parseOrigins(process.env.CORS_ORIGINS);
 const isAllowedOrigin = (origin) =>
   corsOrigins.some((allowedOrigin) => matchesOriginPattern(origin, allowedOrigin));
 
+function getRequiredSecret(name, minLength = 32) {
+  const value = process.env[name];
+  if (value && value.length >= minLength) {
+    return value;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(`${name} must be set with at least ${minLength} characters`);
+  }
+
+  return crypto.randomBytes(Math.max(minLength, 32)).toString('hex');
+}
+
 module.exports = {
   port: Number(process.env.PORT) || 3001,
   nodeEnv: process.env.NODE_ENV || 'development',
-  jwtSecret: process.env.JWT_SECRET || 'dev-jwt-secret-min-32-characters-long!!',
-  jwtRefreshSecret:
-    process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-min-32-characters!!',
-  payloadHmacSecret:
-    process.env.PAYLOAD_HMAC_SECRET || 'dev-hmac-secret-min-32-characters-long!!',
-  dataEncryptionKey:
-    process.env.DATA_ENCRYPTION_KEY || '0123456789abcdef0123456789abcdef',
+  jwtSecret: getRequiredSecret('JWT_SECRET'),
+  jwtRefreshSecret: getRequiredSecret('JWT_REFRESH_SECRET'),
+  payloadHmacSecret: getRequiredSecret('PAYLOAD_HMAC_SECRET'),
+  dataEncryptionKey: getRequiredSecret('DATA_ENCRYPTION_KEY'),
   corsOrigins,
   isAllowedOrigin,
   trustProxy: process.env.TRUST_PROXY === 'true',

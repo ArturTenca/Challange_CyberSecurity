@@ -37,9 +37,14 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const challenge = await requestLogin(email.trim(), password);
+      if (challenge.devCode) {
+        await verify2FA(challenge.challengeId, challenge.devCode);
+        router.replace('/');
+        return;
+      }
       setChallengeId(challenge.challengeId);
-      setDevCodeHint(challenge.devCode || '');
-      setOtpCode(challenge.devCode || '');
+      setDevCodeHint('');
+      setOtpCode('');
       setStep('2fa');
     } catch (err) {
       setError(err instanceof Error ? err.message : getPublicErrorMessage());

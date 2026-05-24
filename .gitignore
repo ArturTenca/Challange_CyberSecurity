@@ -31,7 +31,24 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
+.env.*
 .env*.local
+!.env.example
+!.env.*.example
+
+# local credentials and secrets
+.envrc
+*.secret
+*.secrets
+*.credentials.json
+service-account*.json
+.npmrc
+
+# build output and local tooling
+.expo/
+coverage/
+*.log
 
 # typescript
 *.tsbuildinfo

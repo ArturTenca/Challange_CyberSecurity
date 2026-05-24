@@ -29,7 +29,6 @@ async function seedUsers() {
   }
   secureLog('info', 'demo_users_seeded', {
     accounts: users.map((u) => ({ email: u.email, role: u.role })),
-    passwordHint: 'Ford@2026 (apenas desenvolvimento)',
   });
 }
 
