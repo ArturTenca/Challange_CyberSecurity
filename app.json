@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Ford Ranger Raptor",
+    "slug": "ford-ranger-raptor",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "fordrangerraptor",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "icon": "./assets/expo.icon"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#080a0e",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/expo.icon/Assets/grid.png"
+    },
+    "plugins": [
+      ["expo-router", { "root": "./src/app" }],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#080a0e"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "apiBaseUrl": "http://localhost:3001",
+      "payloadHmacSecret": "dev-hmac-secret-min-32-characters-long!!"
+    }
+  }
+}

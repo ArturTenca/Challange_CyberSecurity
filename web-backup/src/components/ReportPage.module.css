@@ -1,0 +1,707 @@
+﻿/* ── PAGE SHELL ── */
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #080a0e;
+  overflow: hidden;
+}
+
+/* ── HEADER ── */
+.header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  background: linear-gradient(to bottom, rgba(8,10,14,0.98) 0%, rgba(8,10,14,0.92) 100%);
+  border-bottom: 1px solid rgba(245, 75, 46, 0.12);
+  z-index: 20;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logoBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+}
+
+.logoImg {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+.headerTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 2px solid #f54b2e;
+  padding-left: 16px;
+}
+
+.headerSub {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: #f54b2e;
+  text-transform: uppercase;
+}
+
+.headerMain {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: #e8e2d6;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.exportGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.exportBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #9aa0ad;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+}
+
+.exportBtn:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: #e8e2d6;
+  background: rgba(255,255,255,0.04);
+}
+
+.exportBtnPdf {
+  border-color: rgba(245, 75, 46, 0.4);
+  color: #f54b2e;
+}
+
+.exportBtnPdf:hover {
+  background: rgba(245, 75, 46, 0.1);
+  border-color: #f54b2e;
+  color: #f54b2e;
+}
+
+.exportBtnActive {
+  background: rgba(245, 75, 46, 0.15) !important;
+  border-color: #f54b2e !important;
+  color: #f54b2e !important;
+}
+
+.exportIcon {
+  font-size: 0.8rem;
+}
+
+.backBtn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #5a6478;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.backBtn:hover {
+  color: #e8e2d6;
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* ── SCROLL AREA ── */
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(245, 75, 46, 0.25);
+  border-radius: 2px;
+}
+
+/* ── HERO STRIP ── */
+.heroStrip {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 36px 40px;
+  background: linear-gradient(135deg, rgba(15,19,24,0.9) 0%, rgba(8,10,14,0.6) 100%);
+  border-bottom: 1px solid rgba(245, 75, 46,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.heroStrip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(245, 75, 46,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroLabel {
+  flex-shrink: 0;
+  min-width: 200px;
+}
+
+.heroEyebrow {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: #f54b2e;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.heroTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2rem;
+  line-height: 1;
+  color: #e8e2d6;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.heroTitle span {
+  color: #f54b2e;
+}
+
+.heroDesc {
+  font-size: 0.7rem;
+  color: #3a4a5e;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
+.heroGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.heroCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 10px;
+  background: rgba(15,19,24,0.7);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-top: 2px solid rgba(245, 75, 46,0.3);
+  text-align: center;
+  transition: border-top-color 0.2s;
+}
+
+.heroCard:hover {
+  border-top-color: #f54b2e;
+  background: rgba(245, 75, 46,0.05);
+}
+
+.heroCardIcon {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.heroCardValue {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: #e8e2d6;
+}
+
+.heroCardLabel {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f54b2e;
+}
+
+.heroCardSub {
+  font-size: 0.6rem;
+  color: #3a4a5e;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ── CHARTS ROW ── */
+.chartsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 24px 40px;
+  background: #080a0e;
+}
+
+.chartCard {
+  background: rgba(15,19,24,0.8);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 20px 16px 16px;
+  position: relative;
+}
+
+.chartCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, #f54b2e, transparent);
+}
+
+.chartCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.chartCardTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: #e8e2d6;
+}
+
+.chartCardSub {
+  font-size: 0.65rem;
+  color: #3a4a5e;
+  letter-spacing: 0.05em;
+}
+
+/* ── FEATURES SECTION ── */
+.featuresSection {
+  padding: 24px 40px 40px;
+}
+
+.featuresSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.featuresSectionTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: #e8e2d6;
+}
+
+.featuresTabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.featuresTab {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #3a4a5e;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.featuresTab:hover {
+  color: #9aa0ad;
+  border-color: rgba(255,255,255,0.15);
+}
+
+.featuresTabActive {
+  background: rgba(245, 75, 46,0.1);
+  border-color: #f54b2e;
+  color: #f54b2e;
+}
+
+/* TABLE */
+.featuresTable {
+  background: rgba(15,19,24,0.7);
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.featuresTableHead {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 12px 20px;
+  background: rgba(245, 75, 46,0.05);
+  border-bottom: 1px solid rgba(245, 75, 46,0.15);
+}
+
+.featuresCol {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f54b2e;
+}
+
+.featuresColVar {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #3a4a5e;
+  text-align: center;
+}
+
+.featuresRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.featuresRow:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.featuresRowAlt {
+  background: rgba(255,255,255,0.01);
+}
+
+.featuresItemName {
+  font-size: 0.75rem;
+  color: #9aa0ad;
+  letter-spacing: 0.02em;
+}
+
+.featuresItemCell {
+  display: flex;
+  justify-content: center;
+}
+
+.checkYes {
+  font-size: 0.9rem;
+  color: #f54b2e;
+  font-weight: 700;
+}
+
+.checkNo {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.08);
+}
+
+.featuresValue {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem;
+  color: #e8e2d6;
+  letter-spacing: 0.04em;
+}
+
+/* ── FOOTER ── */
+.reportFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  background: rgba(8,10,14,0.8);
+}
+
+.reportFooter span {
+  font-size: 0.62rem;
+  color: #2a3240;
+  letter-spacing: 0.05em;
+}
+
+/* ── PRINT STYLES ── */
+@media print {
+  .header { position: static; }
+  .exportGroup, .backBtn { display: none; }
+  .scroll { overflow: visible; height: auto; }
+  .page { height: auto; overflow: visible; }
+  .chartCard { break-inside: avoid; }
+  .featuresTable { break-inside: avoid; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — TABLET  (≤ 700px)
+═══════════════════════════════════════ */
+@media (max-width: 700px) {
+  .header {
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .headerLeft {
+    gap: 12px;
+  }
+
+  .logoImg {
+    height: 26px;
+  }
+
+  .headerTitle {
+    padding-left: 10px;
+  }
+
+  .headerMain {
+    font-size: 0.9rem;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .exportGroup {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .exportBtn {
+    padding: 6px 12px;
+    font-size: 0.65rem;
+  }
+
+  .backBtn {
+    padding: 6px 14px;
+    font-size: 0.65rem;
+  }
+
+  /* Hero strip: stack vertically */
+  .heroStrip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+
+  .heroLabel {
+    min-width: unset;
+  }
+
+  .heroTitle {
+    font-size: 2.4rem;
+  }
+
+  /* 6 → 3 columns */
+  .heroGrid {
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .heroCard {
+    padding: 12px 8px;
+  }
+
+  /* Charts: single column */
+  .chartsRow {
+    grid-template-columns: 1fr;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  .featuresSection {
+    padding: 16px 20px 32px;
+  }
+
+  .featuresTableHead,
+  .featuresRow {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .reportFooter {
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — MOBILE  (≤ 500px)
+═══════════════════════════════════════ */
+@media (max-width: 500px) {
+  .header {
+    padding: 10px 14px;
+  }
+
+  .logoImg {
+    height: 22px;
+  }
+
+  .headerSub {
+    font-size: 0.52rem;
+    letter-spacing: 0.2em;
+  }
+
+  .headerMain {
+    font-size: 0.8rem;
+  }
+
+  .exportBtn {
+    padding: 5px 10px;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+  }
+
+  .exportIcon {
+    display: none;
+  }
+
+  .backBtn {
+    padding: 5px 10px;
+    font-size: 0.6rem;
+  }
+
+  .heroStrip {
+    padding: 20px 14px;
+    gap: 14px;
+  }
+
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroEyebrow {
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+  }
+
+  .heroDesc {
+    font-size: 0.62rem;
+  }
+
+  /* 3 → 2 columns */
+  .heroGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .heroCardValue {
+    font-size: 1.05rem;
+  }
+
+  .heroCardLabel {
+    font-size: 0.55rem;
+  }
+
+  .heroCardSub {
+    font-size: 0.52rem;
+  }
+
+  .chartsRow {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .featuresSection {
+    padding: 12px 14px 28px;
+  }
+
+  .featuresSectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .featuresSectionTitle {
+    font-size: 1.1rem;
+  }
+
+  /* Features table: collapse to 2 columns (name + 1 variant) or scroll */
+  .featuresTable {
+    overflow-x: auto;
+  }
+
+  .featuresTableHead,
+  .featuresRow {
+    min-width: 340px;
+  }
+
+  .featuresItemName {
+    font-size: 0.68rem;
+  }
+
+  .featuresCol,
+  .featuresColVar {
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+  }
+
+  .featuresTabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .featuresTabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featuresTab {
+    white-space: nowrap;
+    padding: 6px 10px;
+    font-size: 0.6rem;
+  }
+
+  .reportFooter {
+    padding: 10px 14px;
+  }
+
+  .reportFooter span {
+    font-size: 0.55rem;
+  }
+}

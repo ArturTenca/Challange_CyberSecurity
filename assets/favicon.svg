@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+	<rect width="64" height="64" rx="16" fill="#080a0e"/>
+	<ellipse cx="32" cy="32" rx="26" ry="16" fill="#0f4db8" stroke="#ffffff" stroke-width="2.5"/>
+	<ellipse cx="32" cy="32" rx="23" ry="13" stroke="#dbe8ff" stroke-opacity="0.55" stroke-width="1.2"/>
+	<text x="32" y="38" text-anchor="middle" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" font-weight="700">Ford</text>
+</svg>
