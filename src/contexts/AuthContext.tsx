@@ -1,16 +1,12 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { AuthUser } from '../config/security';
-import { authService } from '../services/authService';
 import { secureLogger } from '../security/secureLogger';
+import { authService } from '../services/authService';
 
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  requestLogin: (email: string, password: string) => Promise<{
-    challengeId: string;
-    devCode?: string;
-  }>;
-  verify2FA: (challengeId: string, code: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   hasPermission: (permission: string) => boolean;
 }
@@ -52,16 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const requestLogin = useCallback(async (email: string, password: string) => {
-    const challenge = await authService.requestLogin(email, password);
-    return {
-      challengeId: challenge.challengeId,
-      devCode: challenge.devCode,
-    };
-  }, []);
-
-  const verify2FA = useCallback(async (challengeId: string, code: string) => {
-    const logged = await authService.verify2FA(challengeId, code);
+  const login = useCallback(async (email: string, password: string) => {
+    const logged = await authService.login(email, password);
     setUser(logged);
   }, []);
 
@@ -79,8 +67,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ user, loading, requestLogin, verify2FA, logout, hasPermission }),
-    [user, loading, requestLogin, verify2FA, logout, hasPermission]
+    () => ({ user, loading, login, logout, hasPermission }),
+    [user, loading, login, logout, hasPermission]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

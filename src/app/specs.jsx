@@ -1,13 +1,13 @@
-import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Canvas, useFrame, useThree } from '@react-three/fiber/native';
 import { useProgress } from '@react-three/drei/native';
-import * as THREE from 'three';
+import { Canvas, useFrame, useThree } from '@react-three/fiber/native';
+import { useRouter } from 'expo-router';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
-import { getFordData } from '../data/fordData';
+import * as THREE from 'three';
 import FordLoadingOverlay from '../components/ford-loading-overlay';
 import FordRangerRaptor from '../components/FordRangerRaptor';
+import { getFordData } from '../data/fordData';
 
 const { width, height } = Dimensions.get('window');
 const HOTSPOT_SIZE = 40;

@@ -9,7 +9,7 @@ import { sanitizeString, validateInput } from '../utils/validation';
  * Adapte para qualquer entrada de dados sensível!
  */
 export default function SecureFormExample() {
-  const { requestLogin, verify2FA } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,10 +32,8 @@ export default function SecureFormExample() {
     }
     setLoading(true);
     try {
-      const challenge = await requestLogin(emailSanitized, passwordSanitized);
-      const code = challenge.devCode || '123456';
-      await verify2FA(challenge.challengeId, code);
-      Alert.alert('Sucesso', 'Login com 2FA realizado!');
+      await login(emailSanitized, passwordSanitized);
+      Alert.alert('Sucesso', 'Login local realizado!');
     } catch (err) {
       setError(handleApiError(err).message);
     } finally {

@@ -1,41 +1,24 @@
 import {
-  DEMO_PASSWORD,
-  DEMO_USERS,
-  SECURITY_CONFIG,
-  type AuthUser,
+    DEMO_PASSWORD,
+    DEMO_USERS,
+    SECURITY_CONFIG,
+    type AuthUser,
 } from '../config/security';
 import { recordClientAudit } from '../security/auditClient';
 import {
-  deleteSecureItem,
-  getSecureItem,
-  setSecureItem,
+    deleteSecureItem,
+    getSecureItem,
+    setSecureItem,
 } from '../security/secureStorage';
 import { validateInput } from '../utils/validation';
 
-export interface LoginChallengeResult {
-  requires2FA: true;
-  challengeId: string;
-  expiresAt?: number;
-  devCode?: string;
-}
-
 let accessTokenMemory: string | null = null;
-let devChallengeEmail: string | null = null;
 
 function isDemoCredential(email: string, password: string) {
   return (
     DEMO_USERS.some((user) => user.email.toLowerCase() === email.toLowerCase()) &&
     password === DEMO_PASSWORD
   );
-}
-
-function createDemoChallenge(email: string): LoginChallengeResult {
-  devChallengeEmail = email;
-  return {
-    requires2FA: true,
-    challengeId: 'dev-challenge',
-    devCode: '123456',
-  };
 }
 
 async function persistSession(
@@ -50,10 +33,7 @@ async function persistSession(
 }
 
 export const authService = {
-  async requestLogin(
-    email: string,
-    password: string
-  ): Promise<LoginChallengeResult> {
+  async login(email: string, password: string): Promise<AuthUser> {
     const emailNorm = email.trim().toLowerCase();
     const emailCheck = validateInput.email(emailNorm);
     const passwordCheck = validateInput.password(password);
@@ -67,38 +47,15 @@ export const authService = {
     }
 
     recordClientAudit('config_change', { action: 'local_demo_login' });
-    return createDemoChallenge(emailNorm);
-  },
-
-  async verify2FA(challengeId: string, code: string): Promise<AuthUser> {
-    const normalized = code.replace(/\D/g, '').slice(0, 6);
-    if (normalized.length !== 6) {
-      throw new Error('Informe o código de 6 dígitos');
+    const user = DEMO_USERS.find(
+      (demoUser) => demoUser.email.toLowerCase() === emailNorm
+    );
+    if (!user) {
+      throw new Error('Usuário de demonstração não encontrado');
     }
 
-    if (challengeId === 'dev-challenge') {
-      if (normalized !== '123456') {
-        throw new Error('Código incorreto');
-      }
-      const user = DEMO_USERS.find(
-        (u) => u.email.toLowerCase() === devChallengeEmail
-      );
-      if (!user) throw new Error('Sessão expirada. Faça login novamente.');
-      await persistSession(`dev-${user.id}`, `dev-refresh-${user.id}`, user);
-      recordClientAudit('config_change', { action: 'dev_2fa_success' });
-      return user;
-    }
-
-    throw new Error('Sessão de autenticação inválida. Faça login novamente.');
-  },
-
-  /** @deprecated Use requestLogin + verify2FA */
-  async login(email: string, password: string): Promise<AuthUser> {
-    const challenge = await authService.requestLogin(email, password);
-    if (challenge.devCode) {
-      return authService.verify2FA(challenge.challengeId, challenge.devCode);
-    }
-    throw new Error('Verificação em duas etapas necessária');
+    await persistSession(`dev-${user.id}`, `dev-refresh-${user.id}`, user);
+    return user;
   },
 
   async refreshAccessToken(): Promise<string | null> {
@@ -131,7 +88,6 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    devChallengeEmail = null;
     accessTokenMemory = null;
     await deleteSecureItem(SECURITY_CONFIG.accessTokenKey);
     await deleteSecureItem(SECURITY_CONFIG.refreshTokenKey);

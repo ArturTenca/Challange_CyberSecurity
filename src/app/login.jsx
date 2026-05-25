@@ -1,63 +1,39 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-  ActivityIndicator,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { getPublicErrorMessage } from '../utils/errorHandler';
 
 const DEMO_ACCOUNTS = [
   { email: 'admin@ford.demo', role: 'Administrador' },
+  { email: 'analista@ford.demo', role: 'Analista' },
   { email: 'usuario@ford.demo', role: 'Usuário' },
 ];
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { requestLogin, verify2FA } = useAuth();
-  const [step, setStep] = useState('credentials');
+  const { login } = useAuth();
   const [email, setEmail] = useState('usuario@ford.demo');
   const [password, setPassword] = useState('Ford@2026');
-  const [challengeId, setChallengeId] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [devCodeHint, setDevCodeHint] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleCredentials = async () => {
+  const handleLogin = async () => {
     setError('');
     setLoading(true);
     try {
-      const challenge = await requestLogin(email.trim(), password);
-      if (challenge.devCode) {
-        await verify2FA(challenge.challengeId, challenge.devCode);
-        router.replace('/');
-        return;
-      }
-      setChallengeId(challenge.challengeId);
-      setDevCodeHint('');
-      setOtpCode('');
-      setStep('2fa');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : getPublicErrorMessage());
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerify2FA = async () => {
-    setError('');
-    setLoading(true);
-    try {
-      await verify2FA(challengeId, otpCode);
+      await login(email.trim(), password);
       router.replace('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : getPublicErrorMessage());
@@ -69,10 +45,7 @@ export default function LoginScreen() {
   const fillDemo = (demoEmail) => {
     setEmail(demoEmail);
     setPassword('Ford@2026');
-    setStep('credentials');
     setError('');
-    setOtpCode('');
-    setDevCodeHint('');
   };
 
   return (
@@ -88,106 +61,64 @@ export default function LoginScreen() {
             resizeMode="contain"
           />
           <Text style={styles.eyebrow}>Ford Challenge</Text>
-          <Text style={styles.title}>
-            {step === 'credentials' ? 'Entrar' : 'Verificação 2FA'}
-          </Text>
+          <Text style={styles.title}>Entrar</Text>
           <Text style={styles.subtitle}>
-            {step === 'credentials'
-              ? 'Acesse com e-mail e senha. Em seguida, confirme o código de segurança.'
-              : 'Digite o código de 6 dígitos enviado (simulado em ambiente de demonstração).'}
+            Acesse com e-mail e senha para entrar no modo demonstração local.
           </Text>
 
-          {step === 'credentials' ? (
-            <>
-              <Text style={styles.label}>E-mail</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                placeholder="seu@email.com"
-                placeholderTextColor="#4a5568"
-                editable={!loading}
-              />
-              <Text style={styles.label}>Senha</Text>
-              <TextInput
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                placeholder="••••••••"
-                placeholderTextColor="#4a5568"
-                editable={!loading}
-                onSubmitEditing={handleCredentials}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={styles.label}>Código de verificação</Text>
-              <TextInput
-                style={[styles.input, styles.otpInput]}
-                value={otpCode}
-                onChangeText={(v) => setOtpCode(v.replace(/\D/g, '').slice(0, 6))}
-                keyboardType="number-pad"
-                maxLength={6}
-                placeholder="000000"
-                placeholderTextColor="#4a5568"
-                editable={!loading}
-                onSubmitEditing={handleVerify2FA}
-              />
-              {devCodeHint ? (
-                <Text style={styles.devHint}>
-                  Modo demonstração: use o código exibido acima.
-                </Text>
-              ) : null}
-              <TouchableOpacity
-                style={styles.backLink}
-                onPress={() => {
-                  setStep('credentials');
-                  setError('');
-                }}
-                disabled={loading}
-              >
-                <Text style={styles.backLinkText}>← Voltar</Text>
-              </TouchableOpacity>
-            </>
-          )}
+          <Text style={styles.label}>E-mail</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            placeholder="seu@email.com"
+            placeholderTextColor="#4a5568"
+            editable={!loading}
+          />
+          <Text style={styles.label}>Senha</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholder="••••••••"
+            placeholderTextColor="#4a5568"
+            editable={!loading}
+            onSubmitEditing={handleLogin}
+          />
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={step === 'credentials' ? handleCredentials : handleVerify2FA}
+            onPress={handleLogin}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color="#080a0e" />
             ) : (
-              <Text style={styles.buttonText}>
-                {step === 'credentials' ? 'CONTINUAR' : 'VERIFICAR E ENTRAR'}
-              </Text>
+              <Text style={styles.buttonText}>ENTRAR</Text>
             )}
           </TouchableOpacity>
 
-          {step === 'credentials' ? (
-            <View style={styles.demoBox}>
-              <Text style={styles.demoTitle}>Contas de demonstração</Text>
-              {DEMO_ACCOUNTS.map((acc) => (
-                <TouchableOpacity
-                  key={acc.email}
-                  style={styles.demoRow}
-                  onPress={() => fillDemo(acc.email)}
-                  disabled={loading}
-                >
-                  <Text style={styles.demoEmail}>{acc.email}</Text>
-                  <Text style={styles.demoRole}>{acc.role}</Text>
-                </TouchableOpacity>
-              ))}
-              <Text style={styles.demoHint}>Senha: Ford@2026 · 2FA obrigatório</Text>
-            </View>
-          ) : null}
+          <View style={styles.demoBox}>
+            <Text style={styles.demoTitle}>Contas de demonstração</Text>
+            {DEMO_ACCOUNTS.map((acc) => (
+              <TouchableOpacity
+                key={acc.email}
+                style={styles.demoRow}
+                onPress={() => fillDemo(acc.email)}
+                disabled={loading}
+              >
+                <Text style={styles.demoEmail}>{acc.email}</Text>
+                <Text style={styles.demoRole}>{acc.role}</Text>
+              </TouchableOpacity>
+            ))}
+            <Text style={styles.demoHint}>Senha: Ford@2026</Text>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -237,10 +168,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 15,
   },
-  otpInput: { fontSize: 28, letterSpacing: 8, textAlign: 'center', fontWeight: '700' },
-  devHint: { color: '#4ade80', fontSize: 12, marginBottom: 12 },
-  backLink: { marginBottom: 8 },
-  backLinkText: { color: '#6b7a8d', fontSize: 13 },
   error: { color: '#ef4444', fontSize: 13, marginBottom: 12 },
   button: {
     backgroundColor: '#f54b2e',
