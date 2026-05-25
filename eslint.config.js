@@ -6,5 +6,11 @@ module.exports = defineConfig([
   expoConfig,
   {
     ignores: ["dist/*"],
-  }
+  },
+  {
+    files: ["src/app/index.jsx", "src/app/specs.jsx", "src/components/FordRangerRaptor.jsx"],
+    rules: {
+      "react/no-unknown-property": "off",
+    },
+  },
 ]);

@@ -1,222 +1,69 @@
-# 🚀 Quick Start Guide
+# Quick Start Guide
 
-Guia rápido para começar a desenvolver com o Ford Challenge Mobile App.
-
-## ⚡ Instalação (2 minutos)
+## Instalação
 
 ```bash
-# 1. Instalar dependências
 npm install
-
-# 2. Iniciar servidor
-npm start
 ```
 
-## 📱 Rodar a Aplicação
+## Executar
 
 ```bash
-# iOS (macOS only)
-npm run ios
-
-# Android
-npm run android
-
-# Web
-npm run web
-
-# Ou abrir QR code no Expo Go
 npm start
 ```
 
-## 📝 Criar Nova Tela
+Opções por plataforma:
+
+```bash
+npm run android
+npm run ios
+npm run web
+```
+
+## Login demo
+
+Use qualquer uma das contas abaixo com a senha `Ford@2026`:
+
+- `admin@ford.demo`
+- `analista@ford.demo`
+- `usuario@ford.demo`
+
+## Desenvolvimento rápido
+
+Criar tela nova:
 
 ```tsx
-// src/app/my-screen.jsx
 import { View, Text } from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
 
 export default function MyScreen() {
-  const { theme } = useTheme();
-  
   return (
-    <View style={{ backgroundColor: theme.colors.background }}>
-      <Text style={{ color: theme.colors.text }}>
-        Minha Tela
-      </Text>
+    <View>
+      <Text>Minha Tela</Text>
     </View>
   );
 }
 ```
 
-## 🧩 Criar Novo Componente
+Usar tema:
 
 ```tsx
-// src/components/my-component.tsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 
-interface MyComponentProps {
-  title: string;
-}
-
-export const MyComponent: React.FC<MyComponentProps> = ({ title }) => {
-  const { theme } = useTheme();
-
-  return (
-    <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
-      <Text style={{ color: theme.colors.text }}>{title}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: { padding: 16 },
-});
+const { theme } = useTheme();
 ```
 
-## 🗄️ Usar Store Global
+Validar dados:
 
 ```tsx
-import { useVehicleStore } from '@/store/vehicleStore';
-
-function MyComponent() {
-  const { vehicles, setVehicles, loading } = useVehicleStore();
-  
-  // Use o estado global
-  return <Text>{vehicles.length} veículos</Text>;
-}
-```
-
-## 🔌 Fazer Chamada API
-
-```tsx
-import { apiService } from '@/services/apiService';
-
-async function loadData() {
-  try {
-    const vehicles = await apiService.getVehicles();
-    console.log(vehicles);
-  } catch (error) {
-    console.error(error);
-  }
-}
-```
-
-## 📢 Enviar Notificação
-
-```tsx
-import { sendLocalNotification } from '@/services/notificationService';
-
-await sendLocalNotification({
-  title: 'Título',
-  body: 'Corpo da notificação',
-  delay: 2, // segundos
-});
-```
-
-## ✔️ Validar Dados
-
-```tsx
-import { validateInput, sanitizeString } from '@/utils/validation';
+import { validateInput } from '@/utils/validation';
 
 const emailValidation = validateInput.email('user@example.com');
-if (emailValidation.valid) {
-  // Email válido
-} else {
-  console.error(emailValidation.error);
-}
-
-const clean = sanitizeString('<script>alert("XSS")</script>');
-// Result: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
 ```
 
-## 🎨 Usar Tema
-
-```tsx
-import { useTheme } from '@/contexts/ThemeContext';
-
-const { theme, isDark } = useTheme();
-
-// Cores
-theme.colors.primary
-theme.colors.background
-theme.colors.text
-
-// Espaçamento
-theme.spacing.sm // 8
-theme.spacing.md // 12
-theme.spacing.lg // 16
-
-// Tipografia
-theme.fontSize.base // 16
-theme.fontWeight.bold // '700'
-```
-
-## 🧪 Linting
+Rodar lint:
 
 ```bash
 npm run lint
-```
-
-## 📁 Estrutura de Pastas
-
-```
-src/
-├── app/           → Telas (Expo Router)
-├── components/    → Componentes reutilizáveis
-├── store/         → Estado global (Zustand)
-├── services/      → APIs e serviços
-├── contexts/      → React Contexts
-├── constants/     → Constantes (cores, layout, etc)
-├── hooks/         → Custom hooks
-└── utils/         → Funções auxiliares
-```
-
-## 🎯 Desafios Disponíveis
-
-```tsx
-import { useChallengeStore } from '@/store/challengeStore';
-import { ChallengeType } from '@/constants/challenges';
-
-const { setSelectedChallenge } = useChallengeStore();
-
-// Selecionar desafio
-setSelectedChallenge(ChallengeType.COMPETITIVE_INTELLIGENCE);
-```
-
-## 🔍 Debug
-
-### Inspecionar Store
-```tsx
-useVehicleStore.subscribe(state => {
-  console.log('Novo estado:', state);
-});
-```
-
-### Logs de Erro
-```tsx
-import { getErrorMessage } from '@/utils/errorHandler';
-
-try {
-  // algo
-} catch (error) {
-  console.error(getErrorMessage(error));
-}
-```
-
-## 📚 Documentação
-
-- [README.md](./README.md) - Setup e guia completo
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Arquitetura
-- [COMPONENTS.md](./COMPONENTS.md) - Componentes
-- [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) - Sumário
-
-## 🆘 Troubleshooting
-
-### Erro: "Module not found"
-```bash
-npm install
 ```
 
 ### Erro: "Cannot find theme"

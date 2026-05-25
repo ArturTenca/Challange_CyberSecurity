@@ -142,8 +142,8 @@ const MyComponent = ({ data }) => (
 export default withDataFetching(
   MyComponent,
   async () => {
-    const data = await apiService.getVehicles();
-    useVehicleStore.setState({ vehicles: data });
+    const data = await getFordData();
+    useVehicleStore.setState({ vehicles: data.specs });
   }
 );
 ```
@@ -260,11 +260,11 @@ function VehicleList() {
 }
 ```
 
-### 3. Fetch com Tratamento de Erro
+### 3. Carga Local com Tratamento de Erro
 
 ```tsx
 import { useVehicleStore } from '@/store/vehicleStore';
-import { apiService } from '@/services/apiService';
+import { getFordData } from '@/data/fordData';
 
 function MyScreen() {
   const { setLoading, setError, setVehicles } = useVehicleStore();
@@ -272,8 +272,8 @@ function MyScreen() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await apiService.getVehicles();
-      setVehicles(data);
+      const data = await getFordData();
+      setVehicles(data.specs);
     } catch (err) {
       setError(err.message);
     } finally {

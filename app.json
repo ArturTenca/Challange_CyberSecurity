@@ -32,9 +32,6 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "payloadHmacSecret": "dev-hmac-secret-min-32-characters-long!!"
     }
   }
 }

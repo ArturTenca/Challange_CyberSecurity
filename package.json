@@ -50,9 +50,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "npx expo export --platform web",
-    "lint": "expo lint",
-    "api": "npm run start --prefix server",
-    "api:dev": "npm run dev --prefix server"
+    "lint": "expo lint"
   },
   "overrides": {
     "uuid": "^11.1.0"

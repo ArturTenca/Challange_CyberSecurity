@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber/native';
 import { useProgress } from '@react-three/drei/native';
 import * as THREE from 'three';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
-import { fetchFordData } from '../api/fordData';
+import { getFordData } from '../data/fordData';
 import FordLoadingOverlay from '../components/ford-loading-overlay';
 import FordRangerRaptor from '../components/FordRangerRaptor';
 
@@ -153,7 +153,7 @@ export default function SpecsPage() {
   const { active, progress } = useProgress();
 
   useEffect(() => {
-    fetchFordData().then(res => {
+    getFordData().then(res => {
       setData(res);
     });
   }, []);

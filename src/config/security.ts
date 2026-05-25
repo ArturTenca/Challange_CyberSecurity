@@ -1,29 +1,4 @@
-import Constants from 'expo-constants';
-import { Platform } from 'react-native';
-
-const extra = Constants.expoConfig?.extra ?? {};
-
-export function getApiBaseUrl(): string {
-  const fromEnv = process.env.EXPO_PUBLIC_API_URL;
-  const fromExtra = extra.apiBaseUrl as string | undefined;
-  if (fromEnv) return fromEnv;
-  if (fromExtra) return fromExtra;
-  if (Platform.OS === 'web' && typeof window !== 'undefined') {
-    return window.location.origin;
-  }
-  if (Platform.OS === 'android') return 'http://10.0.2.2:3001';
-  return 'http://localhost:3001';
-}
-
 export const SECURITY_CONFIG = {
-  get apiBaseUrl() {
-    return getApiBaseUrl();
-  },
-  payloadHmacSecret:
-    (extra.payloadHmacSecret as string) ||
-    process.env.EXPO_PUBLIC_PAYLOAD_HMAC_SECRET ||
-    'dev-hmac-secret-min-32-characters-long!!',
-  maxPayloadBytes: 64 * 1024,
   accessTokenKey: 'ford_access_token',
   refreshTokenKey: 'ford_refresh_token',
   userKey: 'ford_auth_user',

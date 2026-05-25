@@ -1,45 +1,57 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const MOCK_API_DATA = {
+const FORD_DATA_CACHE_KEY = '@ford_data_v1';
+
+const FORD_DATA = {
   carInfo: {
-    model: "Ranger Raptor 2026",
-    tagline: "Belo Sorriso.",
-    price: "R$ 466.500"
+    model: 'Ranger Raptor 2026',
+    tagline: 'Belo Sorriso.',
+    price: 'R$ 466.500',
   },
   specs: [
-    { section: 'Motor & Performance', items: [
-      { label: 'Motor', value: '3.0 V6 Bi-turbo Diesel' },
-      { label: 'Potência', value: '397 cv @ 3.500 rpm' },
-      { label: 'Torque', value: '583 Nm @ 1.750-3.000 rpm' },
-      { label: 'Câmbio', value: '10 marchas automático SelectShift' },
-      { label: '0-100 km/h', value: '5,4 segundos' },
-      { label: 'Velocidade Máx.', value: '180 km/h' },
-    ]},
-    { section: 'Tração & Suspensão', items: [
-      { label: 'Tração', value: '4x4 inteligente com baixa' },
-      { label: 'Suspensão Dianteira', value: 'Fox Racing Shox 2.5" bypass' },
-      { label: 'Suspensão Traseira', value: 'Multilink com Fox Racing Shox' },
-      { label: 'Course Dianteiro', value: '296 mm' },
-      { label: 'Course Traseiro', value: '297 mm' },
-      { label: 'Ângulo de Ataque', value: '33,1°' },
-    ]},
-    { section: 'Dimensões', items: [
-      { label: 'Comprimento', value: '5.362 mm' },
-      { label: 'Largura', value: '2.028 mm' },
-      { label: 'Altura', value: '1.873 mm' },
-      { label: 'Entre-eixos', value: '3.270 mm' },
-      { label: 'Capacidade de carga', value: '620 kg' },
-      { label: 'Pneus', value: '285/70 R17 BFGoodrich' },
-    ]}
+    {
+      section: 'Motor & Performance',
+      items: [
+        { label: 'Motor', value: '3.0 V6 Bi-turbo Diesel' },
+        { label: 'Potência', value: '397 cv @ 3.500 rpm' },
+        { label: 'Torque', value: '583 Nm @ 1.750-3.000 rpm' },
+        { label: 'Câmbio', value: '10 marchas automático SelectShift' },
+        { label: '0-100 km/h', value: '5,4 segundos' },
+        { label: 'Velocidade Máx.', value: '180 km/h' },
+      ],
+    },
+    {
+      section: 'Tração & Suspensão',
+      items: [
+        { label: 'Tração', value: '4x4 inteligente com baixa' },
+        { label: 'Suspensão Dianteira', value: 'Fox Racing Shox 2.5" bypass' },
+        { label: 'Suspensão Traseira', value: 'Multilink com Fox Racing Shox' },
+        { label: 'Course Dianteiro', value: '296 mm' },
+        { label: 'Course Traseiro', value: '297 mm' },
+        { label: 'Ângulo de Ataque', value: '33,1°' },
+      ],
+    },
+    {
+      section: 'Dimensões',
+      items: [
+        { label: 'Comprimento', value: '5.362 mm' },
+        { label: 'Largura', value: '2.028 mm' },
+        { label: 'Altura', value: '1.873 mm' },
+        { label: 'Entre-eixos', value: '3.270 mm' },
+        { label: 'Capacidade de carga', value: '620 kg' },
+        { label: 'Pneus', value: '285/70 R17 BFGoodrich' },
+      ],
+    },
   ],
   hotspots: [
     {
       id: 'retrovisor',
       left: '60%',
-      top:  '36%',
+      top: '36%',
       panelSide: 'right',
       title: 'Retrovisor Integrado',
-      description: 'Espelhos retrovisores rebatíveis eletricamente com aquecimento e câmera de ponto cego integrada.',
+      description:
+        'Espelhos retrovisores rebatíveis eletricamente com aquecimento e câmera de ponto cego integrada.',
       specs: [
         { label: 'Ajuste', value: 'Elétrico 6 direções' },
         { label: 'Aquecimento', value: 'Sim' },
@@ -55,10 +67,11 @@ const MOCK_API_DATA = {
     {
       id: 'farol',
       left: '85%',
-      top:  '40%',
+      top: '40%',
       panelSide: 'left',
       title: 'Faróis LED Matrix',
-      description: 'Faróis full-LED com tecnologia Matrix adaptativa, ajuste automático de altura e DRL signature.',
+      description:
+        'Faróis full-LED com tecnologia Matrix adaptativa, ajuste automático de altura e DRL signature.',
       specs: [
         { label: 'Tecnologia', value: 'Matrix LED' },
         { label: 'Alcance', value: '120 m (alto)' },
@@ -74,10 +87,11 @@ const MOCK_API_DATA = {
     {
       id: 'roda_dianteira',
       left: '76%',
-      top:  '65%',
+      top: '65%',
       panelSide: 'left',
       title: 'Suspensão Fox 2.5"',
-      description: 'Suspensão dianteira Fox Racing Shox 2.5" bypass com ajuste de amortecimento para off-road extremo.',
+      description:
+        'Suspensão dianteira Fox Racing Shox 2.5" bypass com ajuste de amortecimento para off-road extremo.',
       specs: [
         { label: 'Course', value: '296 mm' },
         { label: 'Pneu', value: '285/70 R17' },
@@ -93,10 +107,11 @@ const MOCK_API_DATA = {
     {
       id: 'roda_traseira',
       left: '22%',
-      top:  '65%',
+      top: '65%',
       panelSide: 'right',
       title: 'Suspensão Traseira Multilink',
-      description: 'Eixo traseiro multilink com Fox Racing Shox, projetado para máxima estabilidade em terrenos irregulares.',
+      description:
+        'Eixo traseiro multilink com Fox Racing Shox, projetado para máxima estabilidade em terrenos irregulares.',
       specs: [
         { label: 'Course', value: '297 mm' },
         { label: 'Eixo', value: 'Multilink independente' },
@@ -112,10 +127,11 @@ const MOCK_API_DATA = {
     {
       id: 'cacamba',
       left: '27%',
-      top:  '42%',
+      top: '42%',
       panelSide: 'right',
       title: 'Caçamba Inteligente',
-      description: 'Caçamba em alumínio de alta resistência com proteção de carga, tomadas 12V/220V e iluminação LED.',
+      description:
+        'Caçamba em alumínio de alta resistência com proteção de carga, tomadas 12V/220V e iluminação LED.',
       specs: [
         { label: 'Capacidade', value: '620 kg' },
         { label: 'Volume', value: '1.430 litros' },
@@ -131,10 +147,11 @@ const MOCK_API_DATA = {
     {
       id: 'motor',
       left: '82%',
-      top:  '30%',
+      top: '30%',
       panelSide: 'left',
       title: 'Motor 3.0 V6 Bi-Turbo',
-      description: 'Bloco V6 biturbo diesel com 397 cv e 583 Nm de torque. O mais potente da categoria pickup off-road.',
+      description:
+        'Bloco V6 biturbo diesel com 397 cv e 583 Nm de torque. O mais potente da categoria pickup off-road.',
       specs: [
         { label: 'Potência', value: '397 cv @ 3.500 rpm' },
         { label: 'Torque', value: '583 Nm' },
@@ -146,28 +163,21 @@ const MOCK_API_DATA = {
         { name: 'Hilux GR-S', value: 65 },
         { name: 'Amarok V6', value: 88 },
       ],
-    }
-  ]
+    },
+  ],
 };
 
-// Simulated async API fetch
-export const fetchFordData = async () => {
+export async function getFordData() {
   try {
-    // Check cache first
-    const cachedData = await AsyncStorage.getItem('@ford_data_v1');
+    const cachedData = await AsyncStorage.getItem(FORD_DATA_CACHE_KEY);
     if (cachedData) {
       return JSON.parse(cachedData);
     }
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Save to cache
-    await AsyncStorage.setItem('@ford_data_v1', JSON.stringify(MOCK_API_DATA));
-    
-    return MOCK_API_DATA;
+
+    await AsyncStorage.setItem(FORD_DATA_CACHE_KEY, JSON.stringify(FORD_DATA));
+    return FORD_DATA;
   } catch (error) {
-    console.error("Error fetching data", error);
-    return MOCK_API_DATA; // fallback
+    console.error('Error loading Ford data', error);
+    return FORD_DATA;
   }
-};
+}

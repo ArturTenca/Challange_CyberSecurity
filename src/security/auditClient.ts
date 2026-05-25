@@ -7,12 +7,12 @@ export type AuditAction =
   | 'auth_failure'
   | 'sync_data';
 
-const localAuditTrail: Array<{
+const localAuditTrail: {
   id: string;
   action: AuditAction;
   timestamp: string;
   meta: Record<string, unknown>;
-}> = [];
+}[] = [];
 
 export function recordClientAudit(
   action: AuditAction,

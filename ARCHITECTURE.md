@@ -173,12 +173,12 @@ Screen Component
     ↓
 Store (Zustand)
     ↓
-Service (API/Notification)
+Service (Local/Auth/Notification)
     ↓
 External Resource
 ```
 
-### Exemplo Completo: Fetch de Veículos
+### Exemplo Completo: Carga de Dados Locais
 
 ```tsx
 // 1. User Action: Screen mounted
@@ -193,7 +193,7 @@ const { setLoading, setError, setVehicles } = useVehicleStore();
 async function fetchVehicles() {
   setLoading(true);
   try {
-    const data = await apiService.getVehicles();
+    const data = await getFordData();
     setVehicles(data);
   } catch (error) {
     setError(error.message);
@@ -202,10 +202,10 @@ async function fetchVehicles() {
   }
 }
 
-// 4. Service makes request
-// - Checks cache first
-// - Makes HTTP request with retry
-// - Stores in cache
+// 4. Service reads local data
+// - Checks AsyncStorage cache
+// - Falls back to bundled data
+// - Stores normalized result
 // - Returns data
 
 // 5. Store updates state
@@ -288,30 +288,19 @@ Para capturar erros:
 
 ---
 
-## API Integration Pattern
+## Local Data Pattern
 
 ```tsx
-// services/apiService.ts
-export const apiService = {
-  getVehicles: async (forceRefresh = false) => {
-    // 1. Check cache
-    if (!forceRefresh) {
-      const cached = await retrieveData(CACHE_KEY);
-      if (cached && !isStale(cached)) return cached;
-    }
-    
-    // 2. Make request with retry
-    const data = await retryWithBackoff(
-      () => fetch(url),
-      maxRetries
-    );
-    
-    // 3. Cache result
-    await storeData(CACHE_KEY, data);
-    
-    return data;
-  },
-};
+// data/fordData.js
+export async function getFordData() {
+  const cached = await AsyncStorage.getItem('@ford_data_v1');
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  await AsyncStorage.setItem('@ford_data_v1', JSON.stringify(FORD_DATA));
+  return FORD_DATA;
+}
 ```
 
 ---

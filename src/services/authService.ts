@@ -5,27 +5,18 @@ import {
   type AuthUser,
 } from '../config/security';
 import { recordClientAudit } from '../security/auditClient';
-import { secureLogger } from '../security/secureLogger';
 import {
   deleteSecureItem,
   getSecureItem,
   setSecureItem,
 } from '../security/secureStorage';
 import { validateInput } from '../utils/validation';
-import { getPublicErrorMessage } from '../utils/errorHandler';
 
 export interface LoginChallengeResult {
   requires2FA: true;
   challengeId: string;
   expiresAt?: number;
   devCode?: string;
-}
-
-interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  user: AuthUser;
 }
 
 let accessTokenMemory: string | null = null;
@@ -45,14 +36,6 @@ function createDemoChallenge(email: string): LoginChallengeResult {
     challengeId: 'dev-challenge',
     devCode: '123456',
   };
-}
-
-function isLocalApi(url: string) {
-  return (
-    url.includes('localhost') ||
-    url.includes('127.0.0.1') ||
-    url.includes('10.0.2.2')
-  );
 }
 
 async function persistSession(
@@ -78,54 +61,13 @@ export const authService = {
     if (!emailCheck.valid) throw new Error(emailCheck.error);
     if (!passwordCheck.valid) throw new Error(passwordCheck.error);
 
-    const url = `${SECURITY_CONFIG.apiBaseUrl}/api/auth/login`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailNorm, password }),
-      });
-
-      if (!response.ok) {
-        recordClientAudit('auth_failure', { status: response.status });
-        if (response.status === 401) {
-          throw new Error('E-mail ou senha incorretos');
-        }
-        if (isDemoCredential(emailNorm, password)) {
-          recordClientAudit('config_change', { action: 'demo_auth_fallback' });
-          return createDemoChallenge(emailNorm);
-        }
-        throw new Error(getPublicErrorMessage(response.status));
-      }
-
-      const data = await response.json();
-      if (!data.requires2FA || !data.challengeId) {
-        throw new Error('Resposta de autenticação inválida');
-      }
-
-      return {
-        requires2FA: true,
-        challengeId: data.challengeId,
-        expiresAt: data.expiresAt,
-        devCode: data.devCode,
-      };
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('incorretos')) {
-        throw error;
-      }
-
-      if (isDemoCredential(emailNorm, password)) {
-        recordClientAudit('config_change', { action: 'demo_auth_fallback' });
-        return createDemoChallenge(emailNorm);
-      }
-
-      if (__DEV__ && isLocalApi(SECURITY_CONFIG.apiBaseUrl)) {
-        throw new Error('Credenciais inválidas');
-      }
-
-      throw new Error('Não foi possível autenticar no momento');
+    if (!isDemoCredential(emailNorm, password)) {
+      recordClientAudit('auth_failure', { email: emailNorm, reason: 'invalid_credentials' });
+      throw new Error('E-mail ou senha incorretos');
     }
+
+    recordClientAudit('config_change', { action: 'local_demo_login' });
+    return createDemoChallenge(emailNorm);
   },
 
   async verify2FA(challengeId: string, code: string): Promise<AuthUser> {
@@ -147,28 +89,7 @@ export const authService = {
       return user;
     }
 
-    const url = `${SECURITY_CONFIG.apiBaseUrl}/api/auth/verify-2fa`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ challengeId, code: normalized }),
-    });
-
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      throw new Error(
-        (body as { error?: string }).error || getPublicErrorMessage(response.status)
-      );
-    }
-
-    const data: TokenResponse = await response.json();
-    await persistSession(data.accessToken, data.refreshToken, data.user);
-    recordClientAudit('config_change', { action: 'login_2fa_success' });
-    secureLogger.info('auth_2fa_success', {
-      userId: data.user.id,
-      role: data.user.role,
-    });
-    return data.user;
+    throw new Error('Sessão de autenticação inválida. Faça login novamente.');
   },
 
   /** @deprecated Use requestLogin + verify2FA */
@@ -189,29 +110,8 @@ export const authService = {
       return accessTokenMemory;
     }
 
-    const url = `${SECURITY_CONFIG.apiBaseUrl}/api/auth/refresh`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
-      });
-
-      if (!response.ok) {
-        await authService.logout();
-        return null;
-      }
-
-      const data = await response.json();
-      const currentUser = await authService.getUser();
-      if (currentUser) {
-        await persistSession(data.accessToken, data.refreshToken, currentUser);
-      }
-      return data.accessToken;
-    } catch {
-      return accessTokenMemory;
-    }
+    await authService.logout();
+    return null;
   },
 
   async getAccessToken(): Promise<string | null> {
@@ -232,18 +132,6 @@ export const authService = {
 
   async logout(): Promise<void> {
     devChallengeEmail = null;
-    const refreshToken = await getSecureItem(SECURITY_CONFIG.refreshTokenKey);
-    if (refreshToken && !refreshToken.startsWith('dev-refresh-')) {
-      try {
-        await fetch(`${SECURITY_CONFIG.apiBaseUrl}/api/auth/logout`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken }),
-        });
-      } catch {
-        // ignore
-      }
-    }
     accessTokenMemory = null;
     await deleteSecureItem(SECURITY_CONFIG.accessTokenKey);
     await deleteSecureItem(SECURITY_CONFIG.refreshTokenKey);
