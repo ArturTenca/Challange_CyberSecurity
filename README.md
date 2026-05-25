@@ -1,5 +1,9 @@
 # Sprint Cybersecurity
 
+## Projeto Deploy:
+
+https://fordranger.netlify.app/
+
 Aplicativo Expo local-first para demonstração da Ford Ranger Raptor, com login local por contas demo, navegação protegida por papéis e dados carregados do próprio app.
 
 ## Estado atual
